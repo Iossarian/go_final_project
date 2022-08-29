@@ -1,4 +1,4 @@
 service:
-  login_max_load: 10
-  password_max_load: 10
-  ip_max_load: 10
+  loginMaxLoad: 10
+  passwordMaxLoad: 10
+  ipMaxLoad: 10

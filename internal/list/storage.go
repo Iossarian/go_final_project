@@ -1,9 +1,10 @@
 package list
 
 import (
-	"abf/internal/service"
-	"github.com/go-redis/redis"
 	"net"
+
+	service "abf/internal/service"
+	"github.com/go-redis/redis"
 )
 
 const (
@@ -31,7 +32,6 @@ func NewStorage(config Config) *Storage {
 
 func (s *Storage) Check(ip net.IP) (service.IPStatus, error) {
 	whiteList, err := s.r.SMembers(white).Result()
-
 	if err != nil {
 		return service.Undefined, err
 	}
@@ -47,7 +47,6 @@ func (s *Storage) Check(ip net.IP) (service.IPStatus, error) {
 	}
 
 	blackList, err := s.r.SMembers(black).Result()
-
 	if err != nil {
 		return service.Undefined, err
 	}
@@ -104,6 +103,7 @@ func (s *Storage) RemoveWhiteNet(net string) error {
 
 	return nil
 }
+
 func (s *Storage) RemoveBlackNet(net string) error {
 	if err := s.r.SRem(black, net).Err(); err != nil {
 		return err

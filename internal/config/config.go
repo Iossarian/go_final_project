@@ -2,10 +2,11 @@ package config
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"log"
 	"net"
+	"os"
+
+	yaml "gopkg.in/yaml.v3"
 )
 
 type Config struct {
@@ -15,9 +16,9 @@ type Config struct {
 	} `yaml:"grpc"`
 
 	Service struct {
-		LoginMaxLoad    int `yaml:"login_max_load"`
-		PasswordMaxLoad int `yaml:"password_max_load"`
-		IpMaxLoad       int `yaml:"ip_max_load"`
+		LoginMaxLoad    int `yaml:"loginMaxLoad"`
+		PasswordMaxLoad int `yaml:"passwordMaxLoad"`
+		IPMaxLoad       int `yaml:"ipMaxLoad"`
 	} `yaml:"service"`
 
 	Redis struct {
@@ -27,7 +28,7 @@ type Config struct {
 }
 
 func NewConfig(configPath string) *Config {
-	f, err := ioutil.ReadFile(configPath)
+	f, err := os.ReadFile(configPath)
 	if err != nil {
 		panic(fmt.Errorf("fail to open config fail: %w", err))
 	}
@@ -51,9 +52,11 @@ func (c *Config) GetGRPCAddr() string {
 func (c *Config) GetLoginMaxLoad() int {
 	return c.Service.LoginMaxLoad
 }
+
 func (c *Config) GetPasswordMaxLoad() int {
 	return c.Service.PasswordMaxLoad
 }
+
 func (c *Config) GetIPMaxLoad() int {
-	return c.Service.IpMaxLoad
+	return c.Service.IPMaxLoad
 }
