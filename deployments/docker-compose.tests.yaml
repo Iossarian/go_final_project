@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  abf_tests:
+    build:
+      context: ../
+      dockerfile: ./build/tests/Dockerfile
+    command: go test -v  ./tests/integration
+    networks:
+      - abf_network
+
+networks:
+  abf_network:
+    external:
+      name: abf_network

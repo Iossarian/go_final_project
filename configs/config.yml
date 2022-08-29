@@ -1,0 +1,12 @@
+grpc:
+  host: abf
+  port: 50051
+
+service:
+  login_max_load: 10
+  password_max_load: 100
+  ip_max_load: 1000
+
+redis:
+  host: redis
+  port: 6379

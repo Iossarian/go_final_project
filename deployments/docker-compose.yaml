@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  abf:
+    build:
+      context: ../
+      dockerfile: ./build/service/Dockerfile
+    ports:
+      - ${GRPC_PORT}:50051
+    depends_on:
+      - redis
+  redis:
+    image: redis:6
+
+networks:
+  default:
+    name: abf_network

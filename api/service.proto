@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package service;
+option go_package = "./;pb";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+service AntiBruteForce {
+  rpc Try(CheckRequest) returns (Status) {}
+  rpc ClearBucket(CheckRequest) returns (google.protobuf.Empty) {}
+  rpc AddWhiteNet(IpRequest) returns (Status) {}
+  rpc AddBlackNet(IpRequest) returns (Status) {}
+  rpc RemoveWhiteNet(IpRequest) returns (Status) {}
+  rpc RemoveBlackNet(IpRequest) returns (Status) {}
+}
+
+message CheckRequest {
+  string Login = 1;
+  string Password = 2;
+  string ip = 3;
+}
+
+message Status {
+  google.protobuf.BoolValue ok = 1;
+}
+
+message IpRequest {
+  string ip = 1;
+}
