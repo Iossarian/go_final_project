@@ -5,12 +5,13 @@ import (
 	"abf/internal/service/pb"
 	"context"
 	"errors"
+	"net"
+
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"net"
 )
 
 type Service struct {
@@ -121,10 +122,12 @@ func (s *Service) Try(_ context.Context, request *pb.CheckRequest) (*pb.Status, 
 		return &pb.Status{Ok: &wrappers.BoolValue{Value: true}}, nil
 	case Rejected:
 		return &pb.Status{Ok: &wrappers.BoolValue{Value: false}}, nil
+	case Undefined:
+		break
 	}
 
 	err = s.bs.Check(request.GetLogin(), request.GetPassword(), request.GetIp())
-	if err == bucket.ErrRejected {
+	if errors.Is(bucket.ErrRejected, err) {
 		return &pb.Status{Ok: &wrappers.BoolValue{Value: false}}, nil
 	} else if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())

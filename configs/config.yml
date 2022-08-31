@@ -3,9 +3,9 @@ grpc:
   port: 50051
 
 service:
-  login_max_load: 10
-  password_max_load: 100
-  ip_max_load: 1000
+  loginMaxLoad: 10
+  passwordMaxLoad: 100
+  ipMaxLoad: 1000
 
 redis:
   host: redis

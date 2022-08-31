@@ -1,14 +1,15 @@
 package bucket
 
 import (
-	"golang.org/x/sync/errgroup"
 	"sync"
+
+	"golang.org/x/sync/errgroup"
 )
 
 type Storage struct {
 	loginMaxLoad, passwordMaxLoad, ipMaxLoad int
 	loginMx, passwordMx, ipMx                sync.Mutex
-	loginBuckets, passwordBuckets, ipBuckets map[string]*bucket
+	loginBuckets, passwordBuckets, ipBuckets map[string]*Bucket
 	loginDelCh, passwordDelCh, ipDelCh       chan string
 }
 
@@ -24,9 +25,9 @@ func NewStorage(config Config) *Storage {
 		passwordMaxLoad: config.GetPasswordMaxLoad(),
 		ipMaxLoad:       config.GetIPMaxLoad(),
 
-		loginBuckets:    map[string]*bucket{},
-		passwordBuckets: map[string]*bucket{},
-		ipBuckets:       map[string]*bucket{},
+		loginBuckets:    map[string]*Bucket{},
+		passwordBuckets: map[string]*Bucket{},
+		ipBuckets:       map[string]*Bucket{},
 
 		loginDelCh:    make(chan string),
 		passwordDelCh: make(chan string),
@@ -102,7 +103,7 @@ func (s *Storage) collectErrors(login, password, ip string) error {
 	return eg.Wait()
 }
 
-func checkBucket(buckets map[string]*bucket, key string, maxLoad int, delCh chan<- string) error {
+func checkBucket(buckets map[string]*Bucket, key string, maxLoad int, delCh chan<- string) error {
 	b, ok := buckets[key]
 	if !ok {
 		b = NewBucket(key, maxLoad, delCh)

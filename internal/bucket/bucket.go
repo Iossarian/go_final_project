@@ -10,7 +10,7 @@ const sleepTime = 10 * time.Second
 
 var ErrRejected = errors.New("rejected")
 
-type bucket struct {
+type Bucket struct {
 	mu      sync.Mutex
 	key     string
 	load    int
@@ -18,13 +18,13 @@ type bucket struct {
 	lastUse time.Time
 }
 
-func NewBucket(key string, maxLoad int, delCh chan<- string) *bucket {
-	b := &bucket{
+func NewBucket(key string, maxLoad int, delCh chan<- string) *Bucket {
+	b := &Bucket{
 		key:     key,
 		maxLoad: maxLoad,
 	}
 
-	go func() {
+	go func(b *Bucket) {
 		ticker := time.NewTicker(time.Duration(int(time.Minute) / b.maxLoad))
 		defer ticker.Stop()
 
@@ -46,12 +46,12 @@ func NewBucket(key string, maxLoad int, delCh chan<- string) *bucket {
 				break
 			}
 		}
-	}()
+	}(b)
 
 	return b
 }
 
-func (b *bucket) check() error {
+func (b *Bucket) check() error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
